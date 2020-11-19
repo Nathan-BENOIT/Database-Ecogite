@@ -1,0 +1,223 @@
+#------------------------------------------------------------
+#        Script MySQL.
+#------------------------------------------------------------
+
+
+#------------------------------------------------------------
+# Table: CLIENT
+#------------------------------------------------------------
+
+CREATE TABLE CLIENT(
+        Id_C        Int NOT NULL ,
+        Nom_C       Varchar (50) NOT NULL ,
+        Prenom_C    Varchar (50) NOT NULL ,
+        Sexe_C      Char (1) NOT NULL ,
+        DateNaiss_C Int NOT NULL ,
+        Adresse1_C  Varchar (50) NOT NULL ,
+        Ville_C     Varchar (50) NOT NULL ,
+        CP_C        Int NOT NULL ,
+        mail_C      Varchar (50) NOT NULL ,
+        Tel_C       Int NOT NULL
+	,CONSTRAINT CLIENT_PK PRIMARY KEY (Id_C)
+)ENGINE=InnoDB;
+
+#------------------------------------------------------------
+# Table: PROPRIETAIRE
+#------------------------------------------------------------
+
+CREATE TABLE PROPRIETAIRE(
+        Id_Pro       Int NOT NULL ,
+        Nom_Pro      Varchar (50) NOT NULL ,
+        Prenom_Pro   Varchar (50) NOT NULL ,
+        Tel_Pro      Int NOT NULL ,
+        Portable_Pro Int NOT NULL ,
+        Adresse1_Pro Varchar (50) NOT NULL ,
+        Ville_Pro    Varchar (50) NOT NULL ,
+        CP_Pro       Int NOT NULL ,
+        Lang_Pro     Varchar (50) NOT NULL
+	,CONSTRAINT PROPRIETAIRE_PK PRIMARY KEY (Id_Pro)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Controleur
+#------------------------------------------------------------
+
+CREATE TABLE Controleur(
+        Id_controleur     Int NOT NULL ,
+        Nom_controleur    Varchar (50) NOT NULL ,
+        Prenom_controleur Varchar (50) NOT NULL
+	,CONSTRAINT Controleur_PK PRIMARY KEY (Id_controleur)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Pièce
+#------------------------------------------------------------
+
+CREATE TABLE Piece(
+        Id_Chambre Int NOT NULL ,
+        Nom_piece  Varchar (50) NOT NULL
+	,CONSTRAINT Piece_PK PRIMARY KEY (Id_Chambre)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Département
+#------------------------------------------------------------
+
+CREATE TABLE Departement(
+        Id_dep  Int NOT NULL ,
+        Nom_dep Varchar (50) NOT NULL
+	,CONSTRAINT Departement_PK PRIMARY KEY (Id_dep)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: GITE
+#------------------------------------------------------------
+
+CREATE TABLE GITE(
+        Id_Gite            Int NOT NULL ,
+        Nom_Gite           Varchar (50) NOT NULL ,
+        CoordGPS_Gite      Int NOT NULL ,
+        Dispo_Gite         Bool NOT NULL ,
+        Adresse_Gite       Varchar (50) NOT NULL ,
+        NombreChambre_Gite Int NOT NULL ,
+        Capacite_Gite      Int NOT NULL ,
+        Superficie_Gite    Float NOT NULL ,
+        Type_Gite          Varchar (50) NOT NULL ,
+        Classement_Gite    Int NOT NULL ,
+        Prix_Gite          Float NOT NULL ,
+        Id_Pro             Int NOT NULL ,
+        Id_dep             Int NOT NULL
+	,CONSTRAINT GITE_PK PRIMARY KEY (Id_Gite)
+
+	,CONSTRAINT GITE_PROPRIETAIRE_FK FOREIGN KEY (Id_Pro) REFERENCES PROPRIETAIRE(Id_Pro)
+	,CONSTRAINT GITE_Departement0_FK FOREIGN KEY (Id_dep) REFERENCES Departement(Id_dep)
+)ENGINE=InnoDB;
+
+#------------------------------------------------------------
+# Table: __Equipement
+#------------------------------------------------------------
+
+CREATE TABLE __Equipement(
+        Id_Equipement                Int NOT NULL ,
+        Plain_Pied_Equipement        Bool NOT NULL ,
+        Barbecue_Equipement          Bool NOT NULL ,
+        Bebe_Equipement              Bool NOT NULL ,
+        Microonde_Equipement         Bool NOT NULL ,
+        Internet_Equipement          Bool NOT NULL ,
+        Draps_Equipement             Bool NOT NULL ,
+        Couettes_Equipement          Bool NOT NULL ,
+        Terrain_Equipement           Bool NOT NULL ,
+        Gites_Regroupable_Equipement Bool NOT NULL ,
+        Lave_Linge_Equipement        Bool NOT NULL ,
+        Tele_Equipement              Bool NOT NULL ,
+        Congelateur_Equipement       Bool NOT NULL ,
+        Ecogite_Equipement           Bool NOT NULL ,
+        Chauffage_Equipement         Bool NOT NULL
+	,CONSTRAINT __Equipement_PK PRIMARY KEY (Id_Equipement)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: ___LOISIRS
+#------------------------------------------------------------
+
+CREATE TABLE ___LOISIRS(
+        Id_Loisirs         Int NOT NULL ,
+        Ski_piste_Loisirs  Bool NOT NULL ,
+        Baignade_Loisirs   Bool NOT NULL ,
+        Equitation_Loisirs Bool NOT NULL ,
+        Tennis_Loisirs     Bool NOT NULL ,
+        Peche_Loisirs      Bool NOT NULL ,
+        Piscine_Loisirs    Bool NOT NULL ,
+        Plage_Loisirs      Bool NOT NULL ,
+        Randonnee_Loisirs  Bool NOT NULL ,
+        Theatre_Loisirs    Bool NOT NULL ,
+        Cinema_Loisirs     Bool NOT NULL
+	,CONSTRAINT ___LOISIRS_PK PRIMARY KEY (Id_Loisirs)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Loue
+#------------------------------------------------------------
+
+CREATE TABLE Loue(
+        Id_Gite      Int NOT NULL ,
+        Id_C         Int NOT NULL ,
+        Date_arrivee Date NOT NULL ,
+        Date_depart  Date NOT NULL ,
+        Note         Int NOT NULL ,
+        Commentaire  Varchar (200) NOT NULL
+	,CONSTRAINT Loue_PK PRIMARY KEY (Id_Gite,Id_C)
+
+	,CONSTRAINT Loue_GITE_FK FOREIGN KEY (Id_Gite) REFERENCES GITE(Id_Gite)
+	,CONSTRAINT Loue_CLIENT0_FK FOREIGN KEY (Id_C) REFERENCES CLIENT(Id_C)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Controle
+#------------------------------------------------------------
+
+CREATE TABLE Controle(
+        Id_Gite                   Int NOT NULL ,
+        Id_controleur             Int NOT NULL ,
+        Date_Controleite_Controle Int NOT NULL ,
+        Note_Insta_Controle       Float NOT NULL ,
+        Note_Confort_Controle     Float NOT NULL ,
+        Note_Hygiene_Controle     Float NOT NULL ,
+        Note_Accueil_Controle     Float NOT NULL ,
+        Commentaire_Controle      Varchar (50) NOT NULL ,
+        Nbr_Epis_Controle         Int NOT NULL
+	,CONSTRAINT Controle_PK PRIMARY KEY (Id_Gite,Id_controleur)
+
+	,CONSTRAINT Controle_GITE_FK FOREIGN KEY (Id_Gite) REFERENCES GITE(Id_Gite)
+	,CONSTRAINT Controle_Controleur0_FK FOREIGN KEY (Id_controleur) REFERENCES Controleur(Id_controleur)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Constitue
+#------------------------------------------------------------
+
+CREATE TABLE Constitue(
+        Id_Chambre Int NOT NULL ,
+        Id_Gite    Int NOT NULL
+	,CONSTRAINT Constitue_PK PRIMARY KEY (Id_Chambre,Id_Gite)
+
+	,CONSTRAINT Constitue_Piece_FK FOREIGN KEY (Id_Chambre) REFERENCES Piece(Id_Chambre)
+	,CONSTRAINT Constitue_GITE0_FK FOREIGN KEY (Id_Gite) REFERENCES GITE(Id_Gite)
+)ENGINE=InnoDB;
+
+#------------------------------------------------------------
+# Table: __Possède
+#------------------------------------------------------------
+
+CREATE TABLE __Possede(
+        Id_Gite       Int NOT NULL ,
+        Id_Equipement Int NOT NULL
+	,CONSTRAINT __Possede_PK PRIMARY KEY (Id_Gite,Id_Equipement)
+
+	,CONSTRAINT __Possede_GITE_FK FOREIGN KEY (Id_Gite) REFERENCES GITE(Id_Gite)
+	,CONSTRAINT __Possede___Equipement0_FK FOREIGN KEY (Id_Equipement) REFERENCES __Equipement(Id_Equipement)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: ___Propose
+#------------------------------------------------------------
+
+CREATE TABLE ___Propose(
+        Id_Gite    Int NOT NULL ,
+        Id_Loisirs Int NOT NULL ,
+        Distance   Float NOT NULL
+	,CONSTRAINT ___Propose_PK PRIMARY KEY (Id_Gite,Id_Loisirs)
+
+	,CONSTRAINT ___Propose_GITE_FK FOREIGN KEY (Id_Gite) REFERENCES GITE(Id_Gite)
+	,CONSTRAINT ___Propose____LOISIRS0_FK FOREIGN KEY (Id_Loisirs) REFERENCES ___LOISIRS(Id_Loisirs)
+)ENGINE=InnoDB;
+
